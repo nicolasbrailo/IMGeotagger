@@ -10,7 +10,7 @@ class Wnd(gtk.Window):
 
         self.connect('destroy', self.on_exit)
         self.set_size_request(width=800, height=600)
-        self.set_title('Tagtag')
+        self.set_title('IMGeotagger')
         self.realize()
 
         self.btn = gtk.Button("Click me")
@@ -20,10 +20,14 @@ class Wnd(gtk.Window):
         self.img_list.get_selection().connect("changed", self.on_image_selection)
 
         img_select_layout = gtk.VBox(False, 0)
-        img_select_layout.pack_start(self.img_list, False, False, 0)
+        vscroll = gtk.ScrolledWindow()
+        vscroll.set_policy(hscrollbar_policy=gtk.POLICY_NEVER, vscrollbar_policy=gtk.POLICY_AUTOMATIC)
+        vscroll.add_with_viewport(self.img_list)
+
+        img_select_layout.pack_start(vscroll, True, True, 0)
         img_select_layout.pack_start(self.btn, False, False, 0)
 
-        self.layout = gtk.HBox(False, 0)
+        self.layout = gtk.HBox(False, 5)
         self.layout.pack_start(img_select_layout, False, False, 0)
         self.add(self.layout)
         self.browser = create_embedded_browser(self.layout,
