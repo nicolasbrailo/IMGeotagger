@@ -2,6 +2,7 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 from embedded_browser import create_embedded_browser
+from img_list import Img_List
 
 class Wnd(gtk.Window):
     def __init__(self):
@@ -13,15 +14,23 @@ class Wnd(gtk.Window):
         self.realize()
 
         self.btn = gtk.Button("Click me")
-
         self.btn.connect('button-press-event', self.btn1)
 
+        self.img_list = Img_List()
+        self.img_list.get_selection().connect("changed", self.on_image_selection)
+
+        img_select_layout = gtk.VBox(False, 0)
+        img_select_layout.pack_start(self.img_list, False, False, 0)
+        img_select_layout.pack_start(self.btn, False, False, 0)
+
         self.layout = gtk.HBox(False, 0)
-        self.layout.pack_start(self.btn, False, False, 0)
+        self.layout.pack_start(img_select_layout, False, False, 0)
         self.add(self.layout)
         self.browser = create_embedded_browser(self.layout,
-                                    'https://www.google.nl/maps/@37.2870888,22.3544721,4.33z')
+                                    'http://example.net')
+                                    #'https://www.google.nl/maps/@37.2870888,22.3544721,4.33z')
 
+        self.img_list.set_path("/home/laptus/Pictures/Fotos/00to_tag/nexus_save/")
         self.show_all()
 
     def on_exit(self, widget, data=None):
@@ -29,10 +38,9 @@ class Wnd(gtk.Window):
 
     def btn1(self, widget, data=None):
         print self.browser.get_url()
-        gc = self.get_style().fg_gc[gtk.STATE_NORMAL]
-        self.window.draw_line(gc, 0, 0, 200, 200)
-        self.btn.window.draw_line(gc, 0, 0, 200, 200)
 
+    def on_image_selection(self, widget, data=None):
+        print "HOLA"
 
 w = Wnd()
 gtk.main()

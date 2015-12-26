@@ -38,7 +38,7 @@ def create_embedded_browser(parent_control, start_url):
 
             gobject.timeout_add(10, self._on_timer)
             # TODO: It may be a better idea to look for a page onLoad
-            gobject.timeout_add(1000, self._hack_crosshair)
+            gobject.timeout_add(5000, self._hack_crosshair)
             
         def _hack_crosshair(self):
             """ Show a crosshair in the middle of the page """
