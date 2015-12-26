@@ -16,7 +16,7 @@ class Wnd(gtk.Window):
         self.btn = gtk.Button("Click me")
         self.btn.connect('button-press-event', self.btn1)
 
-        self.img_list = Img_List()
+        self.img_list = Img_List("/home/laptus/Pictures/Fotos/00to_tag/nexus_save/")
         self.img_list.get_selection().connect("changed", self.on_image_selection)
 
         img_select_layout = gtk.VBox(False, 0)
@@ -30,7 +30,6 @@ class Wnd(gtk.Window):
                                     'http://example.net')
                                     #'https://www.google.nl/maps/@37.2870888,22.3544721,4.33z')
 
-        self.img_list.set_path("/home/laptus/Pictures/Fotos/00to_tag/nexus_save/")
         self.show_all()
 
     def on_exit(self, widget, data=None):
