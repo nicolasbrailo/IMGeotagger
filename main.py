@@ -4,7 +4,44 @@ import gtk
 from embedded_browser import create_embedded_browser
 from img_list import Img_List
 
+class Image_Control(gtk.VBox):
+    def __init__(self, on_set_position_called):
+        gtk.VBox.__init__(self, False, 0)
+
+        self.lbl_img_info = gtk.Label()
+        self.lbl_img_info.set_use_markup(gtk.TRUE)
+
+        self.btn_set_pos = gtk.Button("Set position")
+        self.btn_set_pos.connect('button-press-event', on_set_position_called)
+
+        self.pack_start(self.lbl_img_info, False, False, 2)
+        self.pack_start(self.btn_set_pos, False, False, 2)
+
+        self.on_selection_cleared()
+
+    def on_images_selected(self, img_list):
+        if len(img_list) == 0:
+            self.on_selection_cleared()
+            return
+        elif (len(img_list) == 1):
+            self.lbl_img_info.set_markup("<b>Filename: " + img_list[0].get_fname() + "\n" + \
+                                            "Date:     " + img_list[0].get_date() + "\n" + \
+                                            "Position: " + img_list[0].get_position() + "</b>")
+        else:
+            self.lbl_img_info.set_markup("<b>Filename: Multiple\n" + \
+                                            "Date:     ---\n" + \
+                                            "Position: ---</b>")
+
+        self.btn_set_pos.set_sensitive(True)
+
+    def on_selection_cleared(self):
+        self.btn_set_pos.set_sensitive(False)
+        self.lbl_img_info.set_markup("<b>Filename: ---\n" + \
+                                        "Date:     ---\n" + \
+                                        "Position: ---</b>")
+
 class Wnd(gtk.Window):
+
     def __init__(self):
         gtk.Window.__init__(self)
 
@@ -13,19 +50,17 @@ class Wnd(gtk.Window):
         self.set_title('IMGeotagger')
         self.realize()
 
-        self.btn = gtk.Button("Click me")
-        self.btn.connect('button-press-event', self.btn1)
-
         self.img_list = Img_List("/home/laptus/Pictures/Fotos/00to_tag/nexus_save/")
         self.img_list.get_selection().connect("changed", self.on_image_selection)
-
-        img_select_layout = gtk.VBox(False, 0)
         vscroll = gtk.ScrolledWindow()
         vscroll.set_policy(hscrollbar_policy=gtk.POLICY_NEVER, vscrollbar_policy=gtk.POLICY_AUTOMATIC)
         vscroll.add_with_viewport(self.img_list)
 
+        self.img_ctrl = Image_Control(self.btn1)
+
+        img_select_layout = gtk.VBox(False, 0)
+        img_select_layout.pack_start(self.img_ctrl, False, False, 2)
         img_select_layout.pack_start(vscroll, True, True, 0)
-        img_select_layout.pack_start(self.btn, False, False, 0)
 
         self.layout = gtk.HBox(False, 5)
         self.layout.pack_start(img_select_layout, False, False, 0)
@@ -43,8 +78,7 @@ class Wnd(gtk.Window):
         print self.browser.get_url()
 
     def on_image_selection(self, widget, data=None):
-        selected = self.img_list.get_current_selection()
-        print [img.get_fname() for img in selected]
+        self.img_ctrl.on_images_selected(self.img_list.get_current_selection())
 
 w = Wnd()
 gtk.main()
