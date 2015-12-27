@@ -14,8 +14,8 @@ class Wnd(gtk.Window):
         self.set_title('IMGeotagger')
         self.realize()
 
-        self.img_list = Img_List("/home/laptus/Pictures/Fotos/00to_tag/nexus_save/")
-        self.img_list.get_selection().connect("changed", self.on_image_selection)
+        self.img_list = Img_List('/home/laptus/Pictures/Fotos/00to_tag/nexus_save/')
+        self.img_list.get_selection().connect('changed', self.on_image_selection)
 
         self.img_ctrl = Image_Control(self.callback_set_gps_pos_requested,
                                       self.callback_open_new_path)

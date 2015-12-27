@@ -7,7 +7,7 @@ if os.path.exists(libcef_so):
     if 0x02070000 <= sys.hexversion < 0x03000000:
         import cefpython_py27 as cefpython
     else:
-        raise Exception("Unsupported python version: %s" % sys.version)
+        raise Exception('Unsupported python version: %s' % sys.version)
 else:
     # Import from package
     from cefpython3 import cefpython
@@ -23,7 +23,7 @@ def create_embedded_browser(parent_control, start_url):
         def _find_ctrl_id(ctrl):
             import re
             ctrl_type = ctrl.__class__.__name__
-            hexID = re.search(ctrl_type + " at 0x(\w+)", str(ctrl)).group(1)
+            hexID = re.search(ctrl_type + ' at 0x(\w+)', str(ctrl)).group(1)
             return int(hexID, 16)
 
         def __init__(self, parent_control, start_url):
@@ -64,13 +64,13 @@ def create_embedded_browser(parent_control, start_url):
 
     if not Embedded_Browser_Initialized:
         settings = {
-            "debug": False,
-            "log_severity": cefpython.LOGSEVERITY_INFO,
-            "log_file": "", # Disabled
+            'debug': False,
+            'log_severity': cefpython.LOGSEVERITY_INFO,
+            'log_file': '', # Disabled
             # This directories must be set on Linux
-            "locales_dir_path": cefpython.GetModuleDirectory()+"/locales",
-            "resources_dir_path": cefpython.GetModuleDirectory(),
-            "browser_subprocess_path": "%s/%s" % (cefpython.GetModuleDirectory(), "subprocess"),
+            'locales_dir_path': cefpython.GetModuleDirectory()+'/locales',
+            'resources_dir_path': cefpython.GetModuleDirectory(),
+            'browser_subprocess_path': '%s/%s' % (cefpython.GetModuleDirectory(), 'subprocess'),
         }
 
         cefpython.Initialize(settings)

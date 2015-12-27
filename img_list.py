@@ -14,9 +14,9 @@ class Img_List(gtk.TreeView):
         self.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
 
         #cell renderers for image and image name
-        column_pixbuf = gtk.TreeViewColumn("Image", gtk.CellRendererPixbuf(), pixbuf=1)
+        column_pixbuf = gtk.TreeViewColumn('Image', gtk.CellRendererPixbuf(), pixbuf=1)
         self.append_column(column_pixbuf)
-        column_text = gtk.TreeViewColumn("Name", gtk.CellRendererText(), text=2)
+        column_text = gtk.TreeViewColumn('Name', gtk.CellRendererText(), text=2)
         self.append_column(column_text)
 
         # Provide a nice scrollable window for the users convenience but still extend
@@ -43,14 +43,14 @@ class Img_List(gtk.TreeView):
         lst.sort()
         images = list()
         for filename in lst:
-            if filename.upper().endswith("JPG") or filename.upper().endswith("PNG"):
+            if filename.upper().endswith('JPG') or filename.upper().endswith('PNG'):
                 images.append(os.path.join(path, filename))
 
         loader = self._load_elements(images)
         glib.idle_add(loader.next)
 
     def _load_elements(self, images, step=5):
-      '''Generator to fill the listmodel of a treeview progressively.'''
+      """Generator to fill the listmodel of a treeview progressively."""
       n = 0
       self.freeze_child_notify()
       for img_path in images:
