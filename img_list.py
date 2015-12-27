@@ -34,10 +34,28 @@ class Img_List(gtk.TreeView):
         self.set_path(start_path)
 
     def _on_tooltip_triggered(self, tree_path):
-        print self.elements.get_value(self.elements.get_iter(tree_path), 0)
+        # Get row under cursor
+        img = self.elements.get_value(self.elements.get_iter(tree_path), 0)
+
+        # Create image preview
+        preview = gtk.Image()
+        preview.set_from_pixbuf(img.get_preview())
+
+        # Put the preview in a popup window
+        self._tooltip = gtk.Window(gtk.WINDOW_POPUP)
+        self._tooltip.add(preview)
+        self._tooltip.show_all()
+
+        # Move new window under the cursor. Add a slight offset, otherwise the
+        # mouse will be over the tooltip, the current controll will see the mouse
+        # is gone and kill the popup in the mouse-leave event
+        x, y, mods = self._tooltip.get_screen().get_root_window().get_pointer()
+        self._tooltip.move(x+25, y+25)
 
     def _on_tooltip_gone(self):
-        print "/tooltip"
+        if self._tooltip:
+            self._tooltip.destroy()
+            self._tooltip = None
 
     def get_ui_element(self):
         return self.vscroll
@@ -86,13 +104,16 @@ class Img_List(gtk.TreeView):
             self.pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(self.path, 64, 64)
 
         def get_as_treeview_element(self):
-            return [self, self._get_thumb(), self._get_name()]
+            return [self, self.get_thumb(), self._get_name()]
 
         def as_image(self):
             return Image(self.path, self._get_name())
 
-        def _get_thumb(self):
+        def get_thumb(self):
             return self.pixbuf
+
+        def get_preview(self):
+            return gtk.gdk.pixbuf_new_from_file_at_size(self.path, 500, 500)
 
         def _get_name(self):
             return os.path.splitext(os.path.basename(self.path))[0]
