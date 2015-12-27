@@ -17,7 +17,8 @@ class Wnd(gtk.Window):
         self.img_list = Img_List("/home/laptus/Pictures/Fotos/00to_tag/nexus_save/")
         self.img_list.get_selection().connect("changed", self.on_image_selection)
 
-        self.img_ctrl = Image_Control(self.btn1)
+        self.img_ctrl = Image_Control(self.callback_set_gps_pos_requested,
+                                      self.callback_open_new_path)
 
         img_select_layout = gtk.VBox(False, 0)
         img_select_layout.pack_start(self.img_ctrl, False, False, 2)
@@ -35,7 +36,10 @@ class Wnd(gtk.Window):
     def on_exit(self, widget, data=None):
         gtk.main_quit()
 
-    def btn1(self, widget, data=None):
+    def callback_open_new_path(self, path):
+        self.img_list.set_path(path)
+
+    def callback_set_gps_pos_requested(self):
         print self.browser.get_url()
 
     def on_image_selection(self, widget, data=None):
