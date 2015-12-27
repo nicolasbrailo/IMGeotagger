@@ -43,7 +43,8 @@ class Wnd(gtk.Window):
         print self.browser.get_url()
 
     def on_image_selection(self, widget, data=None):
-        print "HOLA"
+        selected = self.img_list.get_current_selection()
+        print [img.get_fname() for img in selected]
 
 w = Wnd()
 gtk.main()

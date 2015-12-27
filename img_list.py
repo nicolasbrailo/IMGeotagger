@@ -2,12 +2,13 @@ import gtk
 import glib
 import os
 import gobject
+from image import Image
 
 class Img_List(gtk.TreeView):
     """ List of images in a path """
 
     def __init__(self, start_path):
-        self.elements = gtk.ListStore(Img_List.Image, gtk.gdk.Pixbuf, str)
+        self.elements = gtk.ListStore(Img_List.UI_Image, gtk.gdk.Pixbuf, str)
         gtk.TreeView.__init__(self, self.elements)
 
         self.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
@@ -19,6 +20,10 @@ class Img_List(gtk.TreeView):
         self.append_column(column_text)
 
         self.set_path(start_path)
+
+    def get_current_selection(self):
+        (model, selection) = self.get_selection().get_selected_rows()
+        return [model.get_value(model.get_iter(i), 0).as_image() for i in selection]
 
     def set_path(self, path):
         self.elements.clear()
@@ -39,7 +44,7 @@ class Img_List(gtk.TreeView):
       n = 0
       self.freeze_child_notify()
       for img_path in images:
-          self.elements.append(Img_List.Image(img_path).get_as_treeview_element())
+          self.elements.append(Img_List.UI_Image(img_path).get_as_treeview_element())
 
 	  # yield to gtk main loop once awhile
           n += 1
@@ -53,7 +58,7 @@ class Img_List(gtk.TreeView):
       # stop idle_add()
       yield False
 
-    class Image(gobject.GObject):
+    class UI_Image(gobject.GObject):
         def __init__(self, path):
             gobject.GObject.__init__(self)
             self.path = path
@@ -61,6 +66,9 @@ class Img_List(gtk.TreeView):
 
         def get_as_treeview_element(self):
             return [self, self._get_thumb(), self._get_name()]
+
+        def as_image(self):
+            return Image(self.path, self._get_name())
 
         def _get_thumb(self):
             return self.pixbuf
