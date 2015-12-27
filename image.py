@@ -34,6 +34,9 @@ class Image(object):
 
         return lat + ' ' + lon
 
+    def set_position(self, coords):
+        print "Setting {} to {}".format(self.fullpath, coords)
+
     def _dec_to_sex(self, x):
         degrees = int(math.floor(x))
         minutes = int(math.floor(60 * (x - degrees)))
