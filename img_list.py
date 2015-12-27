@@ -19,7 +19,17 @@ class Img_List(gtk.TreeView):
         column_text = gtk.TreeViewColumn("Name", gtk.CellRendererText(), text=2)
         self.append_column(column_text)
 
+        # Provide a nice scrollable window for the users convenience but still extend
+        # a TreeView: most of the functionality a caller would need is in there, so
+        # making this class extend a ScrolledWindow would require a lot of scaffolding
+        self.vscroll = gtk.ScrolledWindow()
+        self.vscroll.set_policy(hscrollbar_policy=gtk.POLICY_NEVER, vscrollbar_policy=gtk.POLICY_AUTOMATIC)
+        self.vscroll.add_with_viewport(self)
+
         self.set_path(start_path)
+
+    def get_ui_element(self):
+        return self.vscroll
 
     def get_current_selection(self):
         (model, selection) = self.get_selection().get_selected_rows()

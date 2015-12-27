@@ -52,15 +52,12 @@ class Wnd(gtk.Window):
 
         self.img_list = Img_List("/home/laptus/Pictures/Fotos/00to_tag/nexus_save/")
         self.img_list.get_selection().connect("changed", self.on_image_selection)
-        vscroll = gtk.ScrolledWindow()
-        vscroll.set_policy(hscrollbar_policy=gtk.POLICY_NEVER, vscrollbar_policy=gtk.POLICY_AUTOMATIC)
-        vscroll.add_with_viewport(self.img_list)
 
         self.img_ctrl = Image_Control(self.btn1)
 
         img_select_layout = gtk.VBox(False, 0)
         img_select_layout.pack_start(self.img_ctrl, False, False, 2)
-        img_select_layout.pack_start(vscroll, True, True, 0)
+        img_select_layout.pack_start(self.img_list.get_ui_element(), True, True, 0)
 
         self.layout = gtk.HBox(False, 5)
         self.layout.pack_start(img_select_layout, False, False, 0)
