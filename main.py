@@ -20,6 +20,7 @@ class Wnd(gtk.Window):
         self.img_ctrl = Image_Control(self.callback_set_gps_pos_requested,
                                       self.callback_open_new_path)
 
+        self.preview = gtk.Image()
         asd = gtk.Button("gjh")
         asd.connect('button-press-event', self.asdasd)
         self.fff = False
@@ -31,9 +32,6 @@ class Wnd(gtk.Window):
 
         self.layout = gtk.HBox(False, 5)
         self.layout.pack_start(img_select_layout, False, False, 0)
-
-        self.preview = gtk.Image()
-        self.preview.hide()
         self.layout.pack_start(self.preview, True, True, 0)
 
         self.add(self.layout)
@@ -42,6 +40,7 @@ class Wnd(gtk.Window):
                                     'https://www.google.nl/maps/@37.2870888,22.3544721,4.33z')
 
         self.show_all()
+        self.preview.hide()
 
     def asdasd(self, widget, data=None):
         if self.fff:

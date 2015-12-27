@@ -26,7 +26,18 @@ class Img_List(gtk.TreeView):
         self.vscroll.set_policy(hscrollbar_policy=gtk.POLICY_NEVER, vscrollbar_policy=gtk.POLICY_AUTOMATIC)
         self.vscroll.add_with_viewport(self)
 
+        # Handle custom tooltips
+        self._tooltips = Img_List.Tooltip_Handler(self, 
+                                                  self._on_tooltip_triggered,
+                                                  self._on_tooltip_gone)
+
         self.set_path(start_path)
+
+    def _on_tooltip_triggered(self, tree_path):
+        print self.elements.get_value(self.elements.get_iter(tree_path), 0)
+
+    def _on_tooltip_gone(self):
+        print "/tooltip"
 
     def get_ui_element(self):
         return self.vscroll
@@ -85,4 +96,49 @@ class Img_List(gtk.TreeView):
 
         def _get_name(self):
             return os.path.splitext(os.path.basename(self.path))[0]
+
+    class Tooltip_Handler(object):
+        def __init__(self, treeview_obj, on_tooltip_triggered, on_tooltip_gone):
+            # Set listeners to detect tooltip event
+            treeview_obj.connect('motion-notify-event', self._on_mouse_move)
+            treeview_obj.connect('leave-notify-event', self._on_mouse_exit)
+
+            self._on_tooltip_triggered = on_tooltip_triggered
+            self._on_tooltip_gone = on_tooltip_gone
+            self._treeview_obj = treeview_obj
+
+            self._tooltip_delay = gtk.Tooltips().delay # Use default wait
+            self._tooltip_position = None
+            self._tooltip_countdown = None
+            self._tooltip_active = False
+
+        def _on_mouse_move(self, widget, data=None):
+            self._stop_active_tooltips()
+            if self._tooltip_countdown is not None:
+                gobject.source_remove(self._tooltip_countdown)
+
+            self._tooltip_countdown = gobject.timeout_add(self._tooltip_delay, self._trigger_tooltip)
+            self._tooltip_position = (int(data.x), int(data.y))
+
+        def _on_mouse_exit(self, widget, data=None):
+            self._stop_active_tooltips()
+            if self._tooltip_countdown is not None:
+                gobject.source_remove(self._tooltip_countdown)
+                self._tooltip_countdown = None
+
+        def _stop_active_tooltips(self):
+            if not self._tooltip_active:
+                return
+
+            self._on_tooltip_gone()
+            self._tooltip_active = False
+
+        def _trigger_tooltip(self):
+            self._tooltip_countdown = None
+            mouse_over_row = self._treeview_obj.get_path_at_pos(\
+                                        self._tooltip_position[0], \
+                                        self._tooltip_position[1])
+            tree_path = mouse_over_row[0]
+            self._tooltip_active = True
+            self._on_tooltip_triggered(tree_path)
 
