@@ -20,18 +20,39 @@ class Wnd(gtk.Window):
         self.img_ctrl = Image_Control(self.callback_set_gps_pos_requested,
                                       self.callback_open_new_path)
 
+        asd = gtk.Button("gjh")
+        asd.connect('button-press-event', self.asdasd)
+        self.fff = False
+
         img_select_layout = gtk.VBox(False, 0)
         img_select_layout.pack_start(self.img_ctrl, False, False, 2)
+        img_select_layout.pack_start(asd, False, False, 2)
         img_select_layout.pack_start(self.img_list.get_ui_element(), True, True, 0)
 
         self.layout = gtk.HBox(False, 5)
         self.layout.pack_start(img_select_layout, False, False, 0)
+
+        self.preview = gtk.Image()
+        self.preview.hide()
+        self.layout.pack_start(self.preview, True, True, 0)
+
         self.add(self.layout)
         self.browser = create_embedded_browser(self.layout,
                                     #'http://example.net')
                                     'https://www.google.nl/maps/@37.2870888,22.3544721,4.33z')
 
         self.show_all()
+
+    def asdasd(self, widget, data=None):
+        if self.fff:
+            self.preview.hide()
+            self.fff = False
+        else:
+            self.preview.set_from_pixbuf(\
+                    gtk.gdk.pixbuf_new_from_file_at_size(
+                        '/home/laptus/Pictures/Fotos/00to_tag/DSC_1366.JPG', 800, 800))
+            self.preview.show()
+            self.fff = True
 
     def on_exit(self, widget, data=None):
         gtk.main_quit()
