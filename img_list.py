@@ -54,6 +54,7 @@ class Img_List(gtk.TreeView):
 
     def _on_tooltip_gone(self):
         if self._tooltip:
+            # TODO: For some reason the tooltips only flicker in the top left corner...
             self._tooltip.destroy()
             self._tooltip = None
 
