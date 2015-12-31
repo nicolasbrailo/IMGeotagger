@@ -31,6 +31,7 @@ def create_embedded_browser(parent_control, start_url):
             windowInfo = cefpython.WindowInfo()
             windowInfo.SetAsChild(windowID)
 
+            
             self.browser = cefpython.CreateBrowserSync(
                 windowInfo,
                 browserSettings={},
@@ -44,13 +45,13 @@ def create_embedded_browser(parent_control, start_url):
             """ Show a crosshair in the middle of the page """
             hack = "" + \
                    "var img = document.createElement('img');" + \
-                   "img.src = 'http://www.clker.com/cliparts/v/Z/s/J/Y/y/crosshair-md.png';" + \
+                   "img.src = 'https://github.com/nicolasbrailo/IMGeotagger/blob/master/crosshair.png?raw=true';" + \
                    "img.style.position='absolute';" + \
                    "img.style.left='50%';" + \
-                   "img.style.marginLeft='-150px';" + \
+                   "img.style.marginLeft='-24px';" + \
                    "img.style.top='50%';" + \
-                   "img.style.marginTop='-150px';" + \
-                   "document.body.appendChild(img);" 
+                   "img.style.marginTop='-24px';" + \
+                   "document.body.appendChild(img);"
             self.browser.GetMainFrame().ExecuteJavascript(hack)
             # Tell gobject we don't need to trigger this callback again
             return False
