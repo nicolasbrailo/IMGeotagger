@@ -25,11 +25,15 @@ class Image(object):
         try:
             lat_key_ref = 'Exif.GPSInfo.GPSLatitudeRef' # S/N
             lat_key = 'Exif.GPSInfo.GPSLatitude'
-            lat = str(Image._sex_to_dec(self._metadata[lat_key].value)) + self._metadata[lat_key_ref].raw_value
+            lat = "{:.4f}{}".format(
+                                Image._sex_to_dec(self._metadata[lat_key].value),
+                                self._metadata[lat_key_ref].raw_value)
 
             lon_key_ref = 'Exif.GPSInfo.GPSLongitudeRef' # West/East
             lon_key = 'Exif.GPSInfo.GPSLongitude'
-            lon = str(Image._sex_to_dec(self._metadata[lon_key].value)) + self._metadata[lon_key_ref].raw_value
+            lon = "{:.4f}{}".format(
+                                Image._sex_to_dec(self._metadata[lon_key].value),
+                                self._metadata[lon_key_ref].raw_value)
         except KeyError:
             return 'Not set'
 
